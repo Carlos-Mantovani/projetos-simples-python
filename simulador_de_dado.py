@@ -30,5 +30,6 @@ class SimuladorDeDado:
     def RolaDado(self):
         print(random.randint(self.valor_minimo, self.valor_maximo))
 
+
 simulador_de_dado = SimuladorDeDado()
 simulador_de_dado.Iniciar()
