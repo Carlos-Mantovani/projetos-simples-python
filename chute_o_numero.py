@@ -1,45 +1,44 @@
 import random
+import PySimpleGUI as sg
 
 class ChutaNumero:
     def __init__(self):
         self.valor_aleatorio = 0
         self.valor_minimo = 1
         self.valor_maximo = 100
-        self.tentativas = 3
         self.venceu = False
 
     def Iniciar(self):
-        self.tentativas = 3
+        layout = [
+            [sg.Text('Seu Chute',size=(39,0))],
+            [sg.Input(size=(18,0),key='ValorChute')],
+            [sg.Button('Chutar')],
+            [sg.Output(size=(39,10))]
+        ]
+        self.janela = sg.Window('Chute o número!',layout=layout)
         self.GerarNumeroAleatorio()
-        self.PedirValorChute()
-        while self.tentativas > 1:
-            if self.chute > self.valor_aleatorio:
-                print('O número secreto é menor')
-                self.tentativas -= 1
-                self.PedirValorChute()
-            elif self.chute < self.valor_aleatorio:
-                print('O número secreto é maior')
-                self.tentativas -= 1
-                self.PedirValorChute()
-            else:
-                print('Você venceu!')
-                self.venceu = True
-                self.ReiniciarJogo()
-        self.ReiniciarJogo()
+        try:
+            while True:
+                self.evento, self.valores = self.janela.Read()
+                if self.evento == 'Chutar':
+                    self.chute = int(self.valores['ValorChute'])
+                    while self.venceu == False:
+                        if self.chute > self.valor_aleatorio:
+                            print('O número secreto é menor')
+                            break
+                        elif self.chute < self.valor_aleatorio:
+                            print('O número secreto é maior')
+                            break
+                        if self.chute == self.valor_aleatorio:
+                            self.venceu = True
+                            print('Você venceu!')
+                            break
+        except:
+            self.janela.close()
+            self.Iniciar()
 
     def GerarNumeroAleatorio(self):
         self.valor_aleatorio = random.randint(self.valor_minimo, self.valor_maximo)
 
-    def PedirValorChute(self):
-        self.chute = int(input('Chute um número: '))
-
-    def ReiniciarJogo(self):
-        resposta = input('Deseja jogar novamente? (sim) (nao): ')
-        if resposta == 'sim':
-            self.Iniciar()
-        else:
-            pass
-
 chute_o_numero = ChutaNumero()
-
 chute_o_numero.Iniciar()
